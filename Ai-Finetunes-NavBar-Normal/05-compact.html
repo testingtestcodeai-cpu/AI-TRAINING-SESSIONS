@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>05 - Compact Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'IBM Plex Sans', sans-serif; background: #f4f4f4; }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    height: 44px;
+    background: #1c1c1c;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .logo img { height: 22px; width: 22px; object-fit: contain; }
+  .logo-text { color: #fff; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.04em; }
+
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+    height: 44px;
+  }
+  .nav-links li a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 16px;
+    color: #aaa;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-links li a:hover { background: #2d2d2d; color: #fff; }
+  .nav-links li a.active { background: #2563eb; color: #fff; }
+
+  .nav-end {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    background: #2d2d2d;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 0.85rem;
+    transition: background 0.15s, color 0.15s;
+  }
+  .icon-btn:hover { background: #3a3a3a; color: #fff; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: #aaa;
+    transition: all 0.3s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); background:#fff; }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); background:#fff; }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: #1c1c1c;
+    border-top: 1px solid #2d2d2d;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: #aaa;
+    text-decoration: none;
+    font-size: 0.82rem;
+    padding: 12px 24px;
+    border-bottom: 1px solid #252525;
+    transition: color 0.15s;
+  }
+  .mobile-menu a:hover { color: #fff; background: #252525; }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+  }
+
+  .demo-content {
+    padding: 60px 24px;
+    text-align: center;
+  }
+  .label { font-size: 0.72rem; color: #999; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+  h2 { font-size: 1.8rem; color: #222; margin-bottom: 8px; font-weight: 500; }
+  p { color: #888; font-size: 0.88rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">
+    <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+    <span class="logo-text">AppName</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Dashboard</a></li>
+    <li><a href="#">Projects</a></li>
+    <li><a href="#">Team</a></li>
+    <li><a href="#">Settings</a></li>
+  </ul>
+  <div class="nav-end">
+    <button class="icon-btn" title="Search">⌕</button>
+    <button class="icon-btn" title="Notifications">🔔</button>
+    <button class="hamburger" id="ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">Dashboard</a>
+  <a href="#">Projects</a>
+  <a href="#">Team</a>
+  <a href="#">Settings</a>
+</div>
+
+<div class="demo-content">
+  <div class="label">Layout 05</div>
+  <h2>Compact Navbar</h2>
+  <p>44px height — ideal for dense dashboards and admin UIs. Every pixel earns its place.</p>
+</div>
+
+<script>
+  const ham = document.getElementById('ham');
+  const menu = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>10 - Mega Menu Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f7f8fc; }
+
+  nav {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 68px;
+    background: #fff;
+    border-bottom: 1px solid #eaecf0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo img { height: 34px; width: 34px; object-fit: contain; }
+  .logo-text { font-size: 1.05rem; font-weight: 700; color: #101828; }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+    align-items: center;
+    height: 68px;
+  }
+  .nav-links > li { position: relative; height: 100%; display: flex; align-items: center; }
+  .nav-links > li > a {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 14px;
+    color: #344054;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+    height: 68px;
+    border-bottom: 2px solid transparent;
+  }
+  .nav-links > li > a:hover,
+  .nav-links > li.active > a { background: #f9fafb; color: #101828; border-bottom-color: #7f56d9; }
+  .nav-links > li > a .chevron { font-size: 0.7rem; color: #98a2b3; transition: transform 0.2s; }
+  .nav-links > li.open > a .chevron { transform: rotate(180deg); }
+
+  /* Mega Menu */
+  .mega-menu {
+    display: none;
+    position: absolute;
+    top: 68px;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 680px;
+    background: #fff;
+    border: 1px solid #eaecf0;
+    border-radius: 12px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+    padding: 28px;
+    z-index: 999;
+  }
+  .nav-links > li.open .mega-menu { display: block; }
+  .mega-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .mega-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .mega-item:hover { background: #f9fafb; }
+  .mega-icon {
+    width: 36px; height: 36px;
+    background: #f4f3ff;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .mega-title { font-size: 0.875rem; font-weight: 600; color: #101828; margin-bottom: 2px; }
+  .mega-desc { font-size: 0.78rem; color: #667085; line-height: 1.4; }
+
+  .dropdown-simple {
+    display: none;
+    position: absolute;
+    top: 68px;
+    left: 0;
+    min-width: 180px;
+    background: #fff;
+    border: 1px solid #eaecf0;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    padding: 8px;
+    z-index: 999;
+  }
+  .nav-links > li.open .dropdown-simple { display: block; }
+  .dropdown-simple a {
+    display: block;
+    padding: 9px 12px;
+    border-radius: 6px;
+    color: #344054;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .dropdown-simple a:hover { background: #f9fafb; color: #101828; }
+
+  .nav-cta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn-ghost {
+    padding: 8px 16px;
+    background: none;
+    border: 1px solid #d0d5dd;
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #344054;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-ghost:hover { background: #f9fafb; }
+  .btn-primary {
+    padding: 8px 16px;
+    background: #7f56d9;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: #6941c6; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span { display: block; width: 22px; height: 1.5px; background: #555; border-radius: 2px; transition: all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: #fff;
+    border-top: 1px solid #eaecf0;
+    padding: 16px 24px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: #344054; text-decoration: none; font-size: 0.9rem; font-weight: 500; padding: 12px 0; border-bottom: 1px solid #f2f4f7; transition: color 0.15s; }
+  .mobile-menu a:hover { color: #7f56d9; }
+
+  @media (max-width: 900px) {
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+  }
+
+  .demo-content { padding: 60px 40px; text-align: center; }
+  .label { font-size: 0.72rem; color: #7f56d9; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; font-weight: 600; }
+  h2 { font-size: 2rem; font-weight: 700; color: #101828; margin-bottom: 8px; }
+  p { color: #667085; font-size: 0.9rem; }
+  .hint { margin-top: 12px; font-size: 0.8rem; color: #98a2b3; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">
+    <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+    <span class="logo-text">Nucleus</span>
+  </a>
+
+  <ul class="nav-links">
+    <li class="has-mega" id="megaItem">
+      <a href="#">Products <span class="chevron">▾</span></a>
+      <div class="mega-menu">
+        <div class="mega-grid">
+          <a href="#" class="mega-item">
+            <div class="mega-icon">📦</div>
+            <div><div class="mega-title">Analytics</div><div class="mega-desc">Real-time insights and dashboards</div></div>
+          </a>
+          <a href="#" class="mega-item">
+            <div class="mega-icon">⚡</div>
+            <div><div class="mega-title">Automation</div><div class="mega-desc">Workflows that run themselves</div></div>
+          </a>
+          <a href="#" class="mega-item">
+            <div class="mega-icon">🔗</div>
+            <div><div class="mega-title">Integrations</div><div class="mega-desc">Connect your existing tools</div></div>
+          </a>
+          <a href="#" class="mega-item">
+            <div class="mega-icon">🛡️</div>
+            <div><div class="mega-title">Security</div><div class="mega-desc">Enterprise-grade protection</div></div>
+          </a>
+          <a href="#" class="mega-item">
+            <div class="mega-icon">📡</div>
+            <div><div class="mega-title">API</div><div class="mega-desc">Full-featured REST & GraphQL</div></div>
+          </a>
+          <a href="#" class="mega-item">
+            <div class="mega-icon">🎨</div>
+            <div><div class="mega-title">Studio</div><div class="mega-desc">Visual design & collaboration</div></div>
+          </a>
+        </div>
+      </div>
+    </li>
+    <li id="resourcesItem">
+      <a href="#">Resources <span class="chevron">▾</span></a>
+      <div class="dropdown-simple">
+        <a href="#">Documentation</a>
+        <a href="#">Blog</a>
+        <a href="#">Changelog</a>
+        <a href="#">Status</a>
+      </div>
+    </li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Enterprise</a></li>
+  </ul>
+
+  <div class="nav-cta">
+    <button class="btn-ghost">Log in</button>
+    <button class="btn-primary">Start free</button>
+    <button class="hamburger" id="ham">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">Products</a>
+  <a href="#">Resources</a>
+  <a href="#">Pricing</a>
+  <a href="#">Enterprise</a>
+  <a href="#">Log in</a>
+</div>
+
+<div class="demo-content">
+  <div class="label">Layout 10</div>
+  <h2>Mega Menu Navbar</h2>
+  <p>Hover/click "Products" or "Resources" to see dropdown menus with rich content layouts.</p>
+  <p class="hint">↑ Try clicking the nav items above</p>
+</div>
+
+<script>
+  document.querySelectorAll('.has-mega, #resourcesItem').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.nav-links > li').forEach(li => li.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.nav-links > li').forEach(li => li.classList.remove('open'));
+  });
+
+  const ham = document.getElementById('ham');
+  const menu = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>

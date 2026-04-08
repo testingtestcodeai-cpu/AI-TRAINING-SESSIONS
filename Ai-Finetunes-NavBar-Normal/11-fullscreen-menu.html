@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>11 - Fullscreen Menu Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Outfit', sans-serif; background: #0e0e0e; overflow-x: hidden; }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 72px;
+    background: rgba(14,14,14,0.9);
+    backdrop-filter: blur(8px);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    z-index: 600;
+  }
+  .logo img { height: 36px; width: 36px; object-fit: contain; }
+  .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: #fff; letter-spacing: 0.08em; }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+    z-index: 600;
+  }
+  .hamburger span {
+    display: block;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .hamburger span:nth-child(1) { width: 28px; }
+  .hamburger span:nth-child(2) { width: 20px; }
+  .hamburger span:nth-child(3) { width: 28px; }
+  .hamburger.open span:nth-child(1) { width: 28px; transform: translateY(8px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+  .hamburger.open span:nth-child(3) { width: 28px; transform: translateY(-8px) rotate(-45deg); }
+
+  /* Fullscreen overlay */
+  .fullscreen-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    background: #0e0e0e;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 80px;
+    clip-path: circle(0% at calc(100% - 56px) 36px);
+    transition: clip-path 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+  .fullscreen-menu.open {
+    clip-path: circle(150% at calc(100% - 56px) 36px);
+    pointer-events: all;
+  }
+
+  .fs-links { list-style: none; }
+  .fs-links li {
+    overflow: hidden;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .fs-links li a {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    color: #333;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    padding: 12px 0;
+    line-height: 1;
+    transition: color 0.2s, transform 0.2s;
+    transform: translateY(100%);
+  }
+  .fullscreen-menu.open .fs-links li a { transform: translateY(0); }
+  .fs-links li:nth-child(1) a { transition-delay: 0.1s; }
+  .fs-links li:nth-child(2) a { transition-delay: 0.15s; }
+  .fs-links li:nth-child(3) a { transition-delay: 0.2s; }
+  .fs-links li:nth-child(4) a { transition-delay: 0.25s; }
+  .fs-links li:nth-child(5) a { transition-delay: 0.3s; }
+  .fs-links li a:hover { color: #ff4d6d; transform: translateX(12px); }
+  .fs-links li a .num { font-size: 0.9rem; color: #444; margin-right: 16px; font-family: 'Outfit', sans-serif; vertical-align: middle; }
+
+  .fs-footer {
+    margin-top: 48px;
+    display: flex;
+    gap: 28px;
+  }
+  .fs-footer a {
+    color: #555;
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .fs-footer a:hover { color: #fff; }
+
+  .hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-top: 72px;
+  }
+  .hero-inner .tag { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: #ff4d6d; margin-bottom: 16px; }
+  .hero-inner h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 8vw, 7rem); color: #fff; letter-spacing: 0.04em; line-height: 0.95; margin-bottom: 16px; }
+  .hero-inner p { color: #555; font-size: 1rem; max-width: 400px; margin: 0 auto; }
+  .hero-inner .hint { margin-top: 40px; font-size: 0.8rem; color: #333; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">
+    <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+    <span class="logo-text">Forge</span>
+  </a>
+  <button class="hamburger" id="ham" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="fullscreen-menu" id="fsMenu">
+  <ul class="fs-links">
+    <li><a href="#"><span class="num">01</span>Work</a></li>
+    <li><a href="#"><span class="num">02</span>Studio</a></li>
+    <li><a href="#"><span class="num">03</span>Process</a></li>
+    <li><a href="#"><span class="num">04</span>Journal</a></li>
+    <li><a href="#"><span class="num">05</span>Contact</a></li>
+  </ul>
+  <div class="fs-footer">
+    <a href="#">Instagram</a>
+    <a href="#">Twitter</a>
+    <a href="#">LinkedIn</a>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="tag">Layout 11 — Fullscreen Menu</div>
+    <h1>Click the<br>menu icon</h1>
+    <p>A dramatic full-screen overlay triggered by the hamburger. Perfect for creative agencies and portfolios.</p>
+    <div class="hint">→ Top right corner</div>
+  </div>
+</div>
+
+<script>
+  const ham = document.getElementById('ham');
+  const fsMenu = document.getElementById('fsMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    fsMenu.classList.toggle('open');
+    document.body.style.overflow = fsMenu.classList.contains('open') ? 'hidden' : '';
+  });
+</script>
+</body>
+</html>

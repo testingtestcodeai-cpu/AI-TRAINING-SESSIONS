@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>13 - Dark Mode Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'JetBrains Mono', monospace; background: #09090b; color: #e4e4e7; }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 60px;
+    background: #111113;
+    border-bottom: 1px solid #27272a;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo img { height: 28px; width: 28px; object-fit: contain; border-radius: 6px; filter: saturate(0.8); }
+  .logo-text { color: #fafafa; font-size: 0.9rem; font-weight: 600; }
+  .logo-badge {
+    background: #18181b;
+    border: 1px solid #3f3f46;
+    color: #71717a;
+    font-size: 0.6rem;
+    padding: 1px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0;
+    list-style: none;
+  }
+  .nav-links a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    color: #71717a;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-links a .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #27272a;
+  }
+  .nav-links a:hover { background: #18181b; color: #e4e4e7; }
+  .nav-links a:hover .dot { background: #3f3f46; }
+  .nav-links a.active { color: #e4e4e7; background: #18181b; }
+  .nav-links a.active .dot { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .icon-btn {
+    width: 34px; height: 34px;
+    border-radius: 6px;
+    background: #18181b;
+    border: 1px solid #27272a;
+    color: #71717a;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .icon-btn:hover { background: #27272a; border-color: #3f3f46; color: #e4e4e7; }
+  .avatar-btn {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #2563eb);
+    border: none;
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.15s;
+  }
+  .avatar-btn:hover { opacity: 0.8; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 6px;
+    padding: 7px;
+  }
+  .hamburger span { display: block; width: 16px; height: 1.5px; background: #71717a; transition: all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); background: #e4e4e7; }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); background: #e4e4e7; }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: #111113;
+    border-bottom: 1px solid #27272a;
+    padding: 8px 24px 16px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: #71717a; text-decoration: none; font-size: 0.82rem; padding: 10px 0; border-bottom: 1px solid #1c1c1f; transition: color 0.15s; }
+  .mobile-menu a:hover { color: #e4e4e7; }
+
+  @media (max-width: 680px) {
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+  }
+
+  .demo-content { padding: 60px 32px; }
+  .label { font-size: 0.7rem; color: #3f3f46; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 12px; }
+  h2 { font-size: 1.8rem; font-weight: 600; color: #fafafa; margin-bottom: 8px; letter-spacing: -0.02em; }
+  p { color: #52525b; font-size: 0.82rem; line-height: 1.6; max-width: 500px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 32px; }
+  .card { background: #111113; border: 1px solid #27272a; border-radius: 8px; padding: 20px; }
+  .card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .card-title { font-size: 0.8rem; font-weight: 600; color: #a1a1aa; }
+  .card-val { font-size: 1.6rem; font-weight: 600; color: #fafafa; }
+  .card-sub { font-size: 0.72rem; color: #52525b; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">
+    <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+    <span class="logo-text">sys.root</span>
+    <span class="logo-badge">v2.1</span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#" class="active"><span class="dot"></span>Overview</a></li>
+    <li><a href="#"><span class="dot"></span>Metrics</a></li>
+    <li><a href="#"><span class="dot"></span>Logs</a></li>
+    <li><a href="#"><span class="dot"></span>Deploy</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <button class="icon-btn" title="Search">⌕</button>
+    <button class="icon-btn" title="Notifications">🔔</button>
+    <button class="icon-btn" title="Settings">⚙</button>
+    <button class="avatar-btn">JD</button>
+    <button class="hamburger" id="ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">Overview</a>
+  <a href="#">Metrics</a>
+  <a href="#">Logs</a>
+  <a href="#">Deploy</a>
+</div>
+
+<div class="demo-content">
+  <div class="label">Layout 13</div>
+  <h2>Dark Mode Navbar</h2>
+  <p>Low-contrast monochrome palette with subtle borders and glow accents. Designed for developer tooling and terminal UIs.</p>
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><div class="card-dot" style="background:#22c55e;box-shadow:0 0 6px #22c55e;"></div><div class="card-title">Uptime</div></div>
+      <div class="card-val">99.97%</div>
+      <div class="card-sub">Last 30 days</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-dot" style="background:#f59e0b;"></div><div class="card-title">Latency</div></div>
+      <div class="card-val">42ms</div>
+      <div class="card-sub">p95 average</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-dot" style="background:#3b82f6;"></div><div class="card-title">Requests</div></div>
+      <div class="card-val">1.4M</div>
+      <div class="card-sub">Today</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ham = document.getElementById('ham');
+  const menu = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>

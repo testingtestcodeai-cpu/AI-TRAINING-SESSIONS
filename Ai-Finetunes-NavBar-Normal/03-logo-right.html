@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>03 - Logo Right Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Space Mono', monospace; background: #0d0d0d; }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 68px;
+    background: #111;
+    border-bottom: 1px solid #2a2a2a;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: #00ff99; }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .nav-badge {
+    background: #00ff99;
+    color: #000;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    margin-left: 20px;
+  }
+  .logo img { height: 34px; width: 34px; object-fit: contain; border-radius: 6px; filter: brightness(0.9); }
+  .logo-text { color: #fff; font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: #888;
+    transition: all 0.3s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background: #00ff99; }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background: #00ff99; }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: #111;
+    border-top: 1px solid #1f1f1f;
+    padding: 20px 40px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: #888;
+    text-decoration: none;
+    font-size: 0.85rem;
+    padding: 12px 0;
+    border-bottom: 1px solid #1a1a1a;
+    letter-spacing: 0.06em;
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: #00ff99; }
+
+  @media (max-width: 768px) {
+    .nav-links, .nav-badge { display: none; }
+    .hamburger { display: flex; }
+  }
+
+  .demo-content {
+    padding: 60px 40px;
+    text-align: center;
+  }
+  .label {
+    display: inline-block;
+    border: 1px solid #00ff99;
+    color: #00ff99;
+    padding: 4px 14px;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  h2 { color: #fff; font-size: 1.8rem; margin-bottom: 8px; }
+  p { color: #555; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<nav>
+  <ul class="nav-links">
+    <li><a href="#">Docs</a></li>
+    <li><a href="#">API</a></li>
+    <li><a href="#">Status</a></li>
+    <li><a href="#">Pricing</a></li>
+  </ul>
+  <div class="nav-actions">
+    <span class="nav-badge">Beta</span>
+    <button class="hamburger" id="ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="#" class="logo">
+      <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+      <span class="logo-text">DEVKIT</span>
+    </a>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">Docs</a>
+  <a href="#">API</a>
+  <a href="#">Status</a>
+  <a href="#">Pricing</a>
+</div>
+
+<div class="demo-content">
+  <div class="label">LAYOUT 03</div>
+  <h2>Logo Right Navbar</h2>
+  <p style="color:#555;">Links anchored left, logo pushed to the far right — asymmetric and unconventional.</p>
+</div>
+
+<script>
+  const ham = document.getElementById('ham');
+  const menu = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>

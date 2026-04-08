@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>12 - Floating Pill Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Figtree', sans-serif; background: linear-gradient(160deg, #e8f0fe 0%, #f3e8ff 50%, #fce4ec 100%); min-height: 100vh; }
+
+  .nav-wrapper {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 500;
+    width: calc(100% - 40px);
+    max-width: 860px;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px 0 16px;
+    height: 56px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 100px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 0 0 1px rgba(255,255,255,0.4) inset;
+    transition: box-shadow 0.3s;
+  }
+  nav:hover {
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.4) inset;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .logo img { height: 30px; width: 30px; object-fit: contain; border-radius: 50%; }
+  .logo-text { font-size: 0.95rem; font-weight: 700; color: #1a1a2e; }
+
+  .nav-links {
+    display: flex;
+    gap: 2px;
+    list-style: none;
+  }
+  .nav-links a {
+    display: block;
+    padding: 6px 14px;
+    color: #555;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 100px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-links a:hover { background: #f1f3f5; color: #111; }
+  .nav-links a.active { background: #111; color: #fff; }
+
+  .nav-cta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cta-btn {
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 100px;
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(99,102,241,0.35);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .cta-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(99,102,241,0.45); }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 6px;
+    border-radius: 50%;
+    transition: background 0.15s;
+  }
+  .hamburger:hover { background: #f1f3f5; }
+  .hamburger span { display: block; width: 18px; height: 1.5px; background: #555; border-radius: 2px; transition: all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: 20px;
+    margin-top: 8px;
+    padding: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    gap: 4px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: #555;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 12px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .mobile-menu a:hover { background: #f1f3f5; color: #111; }
+
+  @media (max-width: 620px) {
+    .nav-links, .cta-btn { display: none; }
+    .hamburger { display: flex; }
+  }
+
+  .page-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 100px 40px 60px;
+  }
+  .tag { font-size: 0.72rem; color: #6366f1; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600; margin-bottom: 12px; }
+  h2 { font-size: 2.5rem; font-weight: 700; color: #1a1a2e; letter-spacing: -0.03em; margin-bottom: 10px; }
+  p { color: #777; font-size: 0.95rem; max-width: 440px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div class="nav-wrapper">
+  <nav>
+    <a href="#" class="logo">
+      <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+      <span class="logo-text">Float</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#">Features</a></li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <div class="nav-cta">
+      <button class="cta-btn">Get Started →</button>
+      <button class="hamburger" id="ham" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#">Home</a>
+    <a href="#">Features</a>
+    <a href="#">Pricing</a>
+    <a href="#">About</a>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="tag">Layout 12</div>
+  <h2>Floating Pill Navbar</h2>
+  <p>Centered floating pill with glassmorphism — modern, airy, and distinctive. Trending in product design.</p>
+</div>
+
+<script>
+  const ham = document.getElementById('ham');
+  const menu = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>

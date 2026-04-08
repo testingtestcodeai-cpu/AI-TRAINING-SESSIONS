@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>14 - Double Row Split Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Barlow', sans-serif; background: #f5f5f0; }
+
+  .nav-top-bar {
+    background: #e63946;
+    padding: 8px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-top-bar .announcement {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .nav-top-bar .announcement strong { font-weight: 700; }
+  .nav-top-bar .top-links { display: flex; gap: 20px; }
+  .nav-top-bar .top-links a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .nav-top-bar .top-links a:hover { color: #fff; }
+
+  .nav-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 72px;
+    background: #1d1d1b;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+  .logo img { height: 40px; width: 40px; object-fit: contain; }
+  .logo-text { color: #fff; font-size: 1.4rem; font-weight: 700; letter-spacing: -0.01em; }
+  .logo-sub { color: #777; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-top: -2px; }
+
+  .nav-links {
+    display: flex;
+    gap: 2px;
+    list-style: none;
+    height: 72px;
+    align-items: stretch;
+  }
+  .nav-links li { display: flex; align-items: center; }
+  .nav-links a {
+    display: flex;
+    align-items: center;
+    padding: 0 18px;
+    height: 100%;
+    color: #aaa;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .nav-links a:hover { color: #fff; }
+  .nav-links a.active { color: #fff; border-bottom-color: #e63946; }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .search-box {
+    display: flex;
+    align-items: center;
+    background: #2a2a28;
+    border: 1px solid #3a3a38;
+    border-radius: 6px;
+    padding: 6px 12px;
+    gap: 6px;
+    color: #777;
+    font-size: 0.8rem;
+    font-family: 'Barlow', sans-serif;
+    cursor: text;
+    transition: border-color 0.15s;
+  }
+  .search-box:focus-within { border-color: #555; }
+  .search-box input { background: none; border: none; outline: none; color: #ddd; font-family: 'Barlow', sans-serif; font-size: 0.82rem; width: 120px; }
+  .search-box input::placeholder { color: #555; }
+
+  .subscribe-btn {
+    background: #e63946;
+    color: #fff;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 6px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .subscribe-btn:hover { background: #c1121f; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span { display: block; width: 22px; height: 1.5px; background: #aaa; transition: all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background: #fff; }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background: #fff; }
+
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    background: #1d1d1b;
+    border-top: 1px solid #2d2d2b;
+    padding: 12px 24px 20px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a { color: #aaa; text-decoration: none; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; padding: 12px 0; border-bottom: 1px solid #2a2a28; transition: color 0.2s; }
+  .mobile-menu a:hover { color: #fff; }
+
+  @media (max-width: 860px) {
+    .nav-links, .search-box { display: none; }
+    .hamburger { display: flex; }
+    .nav-top-bar { padding: 8px 24px; }
+    .nav-main { padding: 0 24px; }
+  }
+  @media (max-width: 500px) {
+    .nav-top-bar .top-links { display: none; }
+  }
+
+  .demo-content { padding: 60px 48px; }
+  h2 { font-size: 2.2rem; font-weight: 700; color: #1d1d1b; margin-bottom: 8px; }
+  .label { font-size: 0.72rem; color: #e63946; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+  p { color: #666; font-size: 0.95rem; line-height: 1.6; max-width: 520px; }
+</style>
+</head>
+<body>
+
+<div class="nav-top-bar">
+  <span class="announcement"><strong>BREAKING:</strong> Read today's top stories</span>
+  <div class="top-links">
+    <a href="#">Sign In</a>
+    <a href="#">Subscribe</a>
+    <a href="#">Newsletter</a>
+  </div>
+</div>
+
+<nav class="nav-main">
+  <a href="#" class="logo">
+    <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+    <div>
+      <span class="logo-text">Tribune</span>
+      <span class="logo-sub">Daily News</span>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#" class="active">World</a></li>
+    <li><a href="#">Politics</a></li>
+    <li><a href="#">Business</a></li>
+    <li><a href="#">Tech</a></li>
+    <li><a href="#">Culture</a></li>
+    <li><a href="#">Opinion</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <div class="search-box">
+      <span>⌕</span>
+      <input type="text" placeholder="Search stories...">
+    </div>
+    <button class="subscribe-btn">Subscribe</button>
+    <button class="hamburger" id="ham">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">World</a>
+  <a href="#">Politics</a>
+  <a href="#">Business</a>
+  <a href="#">Tech</a>
+  <a href="#">Culture</a>
+  <a href="#">Opinion</a>
+</div>
+
+<div class="demo-content">
+  <div class="label">Layout 14</div>
+  <h2>Double Row Split Navbar</h2>
+  <p>Announcement bar on top + main navigation below — standard for news, media, and e-commerce. Maximizes information density while keeping structure clear.</p>
+</div>
+
+<script>
+  const ham = document.getElementById('ham');
+  const menu = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>

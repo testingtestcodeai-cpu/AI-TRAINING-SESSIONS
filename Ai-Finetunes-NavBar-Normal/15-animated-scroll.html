@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15 - Animated Slide-Down Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Manrope', sans-serif; background: #fafafa; overflow-x: hidden; }
+
+  /* Hides on scroll down, shows on scroll up */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 44px;
+    height: 68px;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    box-shadow: 0 1px 0 #f0f0f0;
+    transform: translateY(0);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+  }
+  nav.hidden { transform: translateY(-100%); }
+  nav.elevated { box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo img { height: 34px; width: 34px; object-fit: contain; }
+  .logo-text { font-size: 1.05rem; font-weight: 800; color: #111; letter-spacing: -0.02em; }
+
+  /* Animated underline nav */
+  .nav-links {
+    display: flex;
+    gap: 2px;
+    list-style: none;
+    position: relative;
+  }
+  .nav-links a {
+    display: block;
+    padding: 8px 16px;
+    color: #666;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: color 0.2s, background 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 16px;
+    right: 16px;
+    height: 2px;
+    background: #111;
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+  }
+  .nav-links a:hover { color: #111; background: #f5f5f5; }
+  .nav-links a:hover::after,
+  .nav-links a.active::after { transform: scaleX(1); }
+  .nav-links a.active { color: #111; }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .theme-toggle {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: #f5f5f5;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.15s;
+  }
+  .theme-toggle:hover { background: #eee; }
+  .nav-btn {
+    padding: 8px 20px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .nav-btn:hover { background: #333; transform: translateY(-1px); }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed;
+    top: 68px;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899);
+    width: 0%;
+    z-index: 499;
+    transition: width 0.05s linear;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span { display: block; width: 22px; height: 1.5px; background: #555; border-radius: 2px; transition: all 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed;
+    top: 68px;
+    left: 0; right: 0;
+    z-index: 490;
+    display: none;
+    flex-direction: column;
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 12px 44px 20px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+  .mobile-menu.open { display: flex; transform: translateY(0); opacity: 1; }
+  .mobile-menu a { color: #666; text-decoration: none; font-size: 0.9rem; font-weight: 500; padding: 11px 0; border-bottom: 1px solid #f5f5f5; transition: color 0.15s; }
+  .mobile-menu a:hover { color: #111; }
+
+  @media (max-width: 680px) {
+    nav { padding: 0 24px; }
+    .nav-links, .nav-btn { display: none; }
+    .hamburger { display: flex; }
+    .mobile-menu { padding: 12px 24px 20px; }
+  }
+
+  /* Long scroll demo content */
+  .hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 40px 40px;
+  }
+  .hero .tag { font-size: 0.72rem; font-weight: 700; color: #6366f1; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 12px; }
+  .hero h2 { font-size: 3rem; font-weight: 800; color: #111; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 12px; }
+  .hero p { color: #888; font-size: 0.95rem; max-width: 420px; line-height: 1.7; }
+  .scroll-cue { margin-top: 40px; color: #ccc; font-size: 0.8rem; animation: bounce 1.5s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(6px);} }
+  .section { padding: 80px 44px; border-top: 1px solid #f0f0f0; }
+  .section h3 { font-size: 1.6rem; font-weight: 700; color: #111; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .section p { color: #888; font-size: 0.9rem; line-height: 1.7; max-width: 560px; }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="#" class="logo">
+    <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+    <span class="logo-text">Kinetic</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" class="active">Home</a></li>
+    <li><a href="#">Features</a></li>
+    <li><a href="#">Docs</a></li>
+    <li><a href="#">Blog</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" title="Toggle theme">☀️</button>
+    <button class="nav-btn">Try it free</button>
+    <button class="hamburger" id="ham">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">Home</a>
+  <a href="#">Features</a>
+  <a href="#">Docs</a>
+  <a href="#">Blog</a>
+</div>
+
+<div class="hero">
+  <div class="tag">Layout 15 — Animated Scroll Navbar</div>
+  <h2>Hide on scroll down.<br>Reveal on scroll up.</h2>
+  <p>Smart navigation that stays out of the way while you read, then reappears exactly when you need it.</p>
+  <div class="scroll-cue">↓ Scroll to see behavior</div>
+</div>
+
+<div class="section">
+  <h3>Progressive Reading Bar</h3>
+  <p>The rainbow gradient bar at the top tracks your scroll progress through the page — a subtle but delightful detail popular in editorial and blog layouts.</p>
+</div>
+<div class="section">
+  <h3>Smart Show/Hide Logic</h3>
+  <p>Scrolling down hides the navbar with a smooth slide animation. Scrolling up (even a little) brings it back immediately. This is the pattern used by Medium, Notion, and many top publications.</p>
+</div>
+<div class="section">
+  <h3>Animated Underline Links</h3>
+  <p>Each nav link has a scale-in underline on hover. It's a small detail, but these microinteractions make an interface feel polished and alive.</p>
+</div>
+<div class="section" style="min-height:40vh;">
+  <h3>Elevated Shadow on Scroll</h3>
+  <p>Once the user starts scrolling, a soft shadow appears under the navbar to visually separate it from the content behind it.</p>
+</div>
+
+<script>
+  const navbar = document.getElementById('navbar');
+  const progressBar = document.getElementById('progressBar');
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollY / docH) * 100;
+    progressBar.style.width = progress + '%';
+
+    navbar.classList.toggle('elevated', scrollY > 10);
+
+    if (scrollY > lastScroll && scrollY > 80) {
+      navbar.classList.add('hidden');
+    } else {
+      navbar.classList.remove('hidden');
+    }
+    lastScroll = scrollY;
+  });
+
+  const ham = document.getElementById('ham');
+  const menu = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>

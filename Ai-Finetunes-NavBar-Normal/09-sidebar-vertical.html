@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>09 - Sidebar Vertical Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; display: flex; min-height: 100vh; background: #f0f2f5; }
+
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 240px;
+    background: #1e293b;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 0;
+    z-index: 200;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px 28px;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 12px;
+  }
+  .sidebar-logo img { height: 34px; width: 34px; object-fit: contain; }
+  .sidebar-logo-text { color: #f8fafc; font-size: 1rem; font-weight: 700; }
+
+  .nav-section-label {
+    padding: 8px 20px 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+
+  .sidebar-links { list-style: none; flex: 1; }
+  .sidebar-links li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-left: 3px solid transparent;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .sidebar-links li a .icon { font-size: 1rem; width: 20px; text-align: center; }
+  .sidebar-links li a:hover { background: rgba(255,255,255,0.05); color: #f1f5f9; }
+  .sidebar-links li a.active { background: rgba(99,102,241,0.12); color: #818cf8; border-left-color: #818cf8; }
+
+  .sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: auto;
+  }
+  .user-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: #6366f1;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 0.8rem; font-weight: 700;
+  }
+  .user-info { flex: 1; }
+  .user-name { color: #f1f5f9; font-size: 0.82rem; font-weight: 600; }
+  .user-role { color: #64748b; font-size: 0.72rem; }
+
+  /* Mobile top bar */
+  .mobile-topbar {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    background: #1e293b;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 300;
+  }
+  .mobile-topbar .logo-m { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+  .mobile-topbar .logo-m img { height: 28px; width: 28px; object-fit: contain; }
+  .mobile-topbar .logo-m span { color: #fff; font-weight: 700; font-size: 0.95rem; }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: #94a3b8;
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background:#818cf8; }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background:#818cf8; }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+  }
+  .overlay.open { display: block; }
+
+  .main {
+    margin-left: 240px;
+    flex: 1;
+    padding: 48px 40px;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-240px); }
+    .sidebar.open { transform: translateX(0); }
+    .mobile-topbar { display: flex; }
+    .main { margin-left: 0; padding-top: 80px; }
+  }
+
+  .demo-content { }
+  .label { font-size: 0.72rem; color: #999; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; }
+  h2 { font-size: 2rem; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
+  p { color: #64748b; font-size: 0.95rem; line-height: 1.7; max-width: 480px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 32px; }
+  .card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .card-title { font-weight: 700; color: #334155; font-size: 0.9rem; margin-bottom: 4px; }
+  .card-val { font-size: 1.8rem; font-weight: 700; color: #1e293b; }
+  .card-sub { font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Mobile top bar -->
+<div class="mobile-topbar">
+  <a href="#" class="logo-m">
+    <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+    <span>Dashboard</span>
+  </a>
+  <button class="hamburger" id="ham" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</div>
+
+<div class="overlay" id="overlay"></div>
+
+<nav class="sidebar" id="sidebar">
+  <a href="#" class="sidebar-logo">
+    <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+    <span class="sidebar-logo-text">Dashify</span>
+  </a>
+
+  <div class="nav-section-label">Main</div>
+  <ul class="sidebar-links">
+    <li><a href="#" class="active"><span class="icon">⬛</span>Dashboard</a></li>
+    <li><a href="#"><span class="icon">📊</span>Analytics</a></li>
+    <li><a href="#"><span class="icon">📁</span>Projects</a></li>
+    <li><a href="#"><span class="icon">✉️</span>Messages</a></li>
+  </ul>
+
+  <div class="nav-section-label">Account</div>
+  <ul class="sidebar-links">
+    <li><a href="#"><span class="icon">👤</span>Profile</a></li>
+    <li><a href="#"><span class="icon">⚙️</span>Settings</a></li>
+    <li><a href="#"><span class="icon">🔒</span>Security</a></li>
+  </ul>
+
+  <div class="sidebar-footer">
+    <div class="user-row">
+      <div class="avatar">JD</div>
+      <div class="user-info">
+        <div class="user-name">Jane Doe</div>
+        <div class="user-role">Admin</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="demo-content">
+    <div class="label">Layout 09</div>
+    <h2>Sidebar Vertical Navbar</h2>
+    <p>Fixed vertical navigation — the go-to for dashboards and SaaS apps. Collapses to a slide-in drawer on mobile.</p>
+    <div class="cards">
+      <div class="card"><div class="card-title">Users</div><div class="card-val">4,291</div><div class="card-sub">+12% this week</div></div>
+      <div class="card"><div class="card-title">Revenue</div><div class="card-val">$28k</div><div class="card-sub">+5% this month</div></div>
+      <div class="card"><div class="card-title">Sessions</div><div class="card-val">9,104</div><div class="card-sub">Active today</div></div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const ham = document.getElementById('ham');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+  overlay.addEventListener('click', () => {
+    ham.classList.remove('open');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  });
+</script>
+</body>
+</html>

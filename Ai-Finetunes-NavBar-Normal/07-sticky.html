@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>07 - Sticky Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #f8f9fb; }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 64px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    transition: box-shadow 0.3s, background 0.3s;
+  }
+  nav.scrolled {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    background: rgba(255,255,255,0.97);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo img { height: 32px; width: 32px; object-fit: contain; }
+  .logo-text { font-size: 1rem; font-weight: 600; color: #111; letter-spacing: -0.02em; }
+
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+  .nav-links a {
+    display: block;
+    padding: 6px 14px;
+    color: #555;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .nav-links a:hover { background: #f1f3f5; color: #111; }
+
+  .nav-cta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .btn-ghost {
+    padding: 7px 16px;
+    background: none;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .btn-ghost:hover { border-color: #aaa; background: #f8f9fb; }
+  .btn-primary {
+    padding: 7px 16px;
+    background: #111;
+    border: 1px solid #111;
+    border-radius: 7px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: #333; }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: #333;
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: sticky;
+    top: 64px;
+    z-index: 999;
+    display: none;
+    flex-direction: column;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #eee;
+    padding: 12px 40px 20px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: #555;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    transition: color 0.15s;
+  }
+  .mobile-menu a:hover { color: #111; }
+
+  @media (max-width: 680px) {
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+  }
+
+  /* Demo scroll content */
+  .hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+  }
+  .hero .tag { font-size: 0.75rem; font-weight: 600; color: #6366f1; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+  .hero h2 { font-size: 3rem; font-weight: 600; color: #111; letter-spacing: -0.03em; margin-bottom: 12px; line-height: 1.1; }
+  .hero p { color: #888; font-size: 1rem; max-width: 460px; line-height: 1.6; margin-bottom: 24px; }
+  .scroll-hint { font-size: 0.8rem; color: #bbb; margin-top: 40px; }
+  .section { height: 80vh; display: flex; align-items: center; justify-content: center; color: #ccc; font-size: 1rem; border-top: 1px solid #eee; }
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <a href="#" class="logo">
+    <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+    <span class="logo-text">Horizon</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#">Product</a></li>
+    <li><a href="#">Features</a></li>
+    <li><a href="#">Pricing</a></li>
+    <li><a href="#">Blog</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn-ghost">Log in</button>
+    <button class="btn-primary">Get started</button>
+    <button class="hamburger" id="ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#">Product</a>
+  <a href="#">Features</a>
+  <a href="#">Pricing</a>
+  <a href="#">Blog</a>
+</div>
+
+<div class="hero">
+  <div class="tag">Layout 07 — Sticky Navbar</div>
+  <h2>Scroll down to see<br>the sticky effect</h2>
+  <p>The navbar uses backdrop-filter blur and transitions shadow on scroll for a polished, modern feel.</p>
+  <div class="scroll-hint">↓ Scroll</div>
+</div>
+<div class="section">Section content appears here</div>
+<div class="section">More content further down the page</div>
+
+<script>
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  const ham = document.getElementById('ham');
+  const menu = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>

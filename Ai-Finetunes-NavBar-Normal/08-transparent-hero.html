@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>08 - Transparent Hero Navbar</title>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Raleway', sans-serif; }
+
+  .hero-section {
+    position: relative;
+    height: 100vh;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 80px;
+    background: transparent;
+    transition: background 0.4s, box-shadow 0.4s;
+  }
+  nav.solid {
+    background: rgba(15, 32, 39, 0.92);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo img { height: 38px; width: 38px; object-fit: contain; filter: brightness(1.1); }
+  .logo-text { color: #fff; font-size: 1.2rem; font-weight: 700; letter-spacing: 0.06em; }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: #fff; }
+
+  .nav-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    padding: 9px 22px;
+    border-radius: 6px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+    backdrop-filter: blur(6px);
+  }
+  .nav-btn:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+  .hamburger span {
+    display: block;
+    width: 24px;
+    height: 1.5px;
+    background: rgba(255,255,255,0.8);
+    transition: all 0.3s;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: absolute;
+    top: 80px;
+    left: 0; right: 0;
+    z-index: 99;
+    display: none;
+    flex-direction: column;
+    background: rgba(15,32,39,0.97);
+    backdrop-filter: blur(10px);
+    padding: 20px 48px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    transition: color 0.2s;
+  }
+  .mobile-menu a:hover { color: #fff; }
+
+  @media (max-width: 680px) {
+    nav { padding: 0 24px; }
+    .nav-links, .nav-btn { display: none; }
+    .hamburger { display: flex; }
+    .mobile-menu { padding: 20px 24px; }
+  }
+
+  .hero-text { color: #fff; }
+  .hero-text .tag { font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+  .hero-text h1 { font-size: 3.5rem; font-weight: 700; line-height: 1.1; margin-bottom: 16px; }
+  .hero-text p { font-size: 1.1rem; font-weight: 300; color: rgba(255,255,255,0.6); }
+
+  .below { height: 60vh; background: #f5f5f5; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<div class="hero-section" id="heroSection">
+  <nav id="navbar">
+    <a href="#" class="logo">
+      <img src="https://raw.githubusercontent.com/testingtestcodeai-cpu/L/refs/heads/main/file_00000000d44c71fab450bdb269c872fe.png" alt="Logo">
+      <span class="logo-text">Vertex</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Portfolio</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="nav-btn">Contact Us</button>
+      <button class="hamburger" id="ham" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#">Services</a>
+    <a href="#">Portfolio</a>
+    <a href="#">About</a>
+    <a href="#">Contact</a>
+  </div>
+
+  <div class="hero-text">
+    <div class="tag">Layout 08 — Transparent Hero Navbar</div>
+    <h1>Transparent<br>Overlay Nav</h1>
+    <p>Floats over a hero image/gradient — turns solid on scroll.</p>
+  </div>
+</div>
+
+<div class="below">Scroll up to see the transparent navbar overlay ↑</div>
+
+<script>
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('solid', window.scrollY > 40);
+  });
+  const ham = document.getElementById('ham');
+  const menu = document.getElementById('mobileMenu');
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+</script>
+</body>
+</html>
